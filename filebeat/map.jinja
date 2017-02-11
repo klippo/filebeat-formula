@@ -1,34 +1,39 @@
-# placeholders at this point:
+# -*- coding: utf-8 -*-
+# vim: ft=yml
+
+{% import_yaml 'filebeat/defaults.yaml' as defaults %}
+
+{% set filebeat = salt['pillar.get'](
+        'filebeat',
+        default=defaults.filebeat,
+        merge=True
+    )
+%}
+
 {% set conf = salt['grains.filter_by']({
     'Debian': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
     'Ubuntu': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
     'RedHat': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
     'CentOS': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
     'Suse': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
     'FreeBSD': {
         'config_path': '/etc/filebeat/filebeat.yml',
         'config_source': 'salt://filebeat/files/filebeat.jinja',
-        'runlevels_install': True,
     },
 }, merge=salt['pillar.get']('filebeat:lookup')) %}
 

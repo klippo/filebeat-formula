@@ -3,40 +3,55 @@ filebeat:
     config_path: /etc/mycustom/filebeat/filebeat.yml
     config_source: salt://mycustom/filebeat/filebeat.jinja
     runlevels_install: True
-
-  # if no log_paths specified, generic syslogs are default
   log_paths:
     -
+      input_type: log
       paths:
         - '/var/log/auth.log'
         - '/var/log/syslog'
+        - '/var/log/messages'
+        - '/var/log/secure'
+      document_type: syslog
+      ignore_older: 24h
+      scan_frequency: 10s
+      backoff: 1s
+      max_backoff: 10s
+      backoff_factor: 2
+      force_close_files: false
+      fields_under_root: false
+      close_older:  1h
     -
+      input_type: log
       paths:
         - '/var/log/apache2/access.log'
-      input_type: 'log'
       document_type: 'syslog'
       ignore_older: '24h'
       close_older: '2h'
-      multiline:
-        pattern: ^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}
-        negate: 'true'
-        match: 'after'
-      include_lines:
-        - '^[[:digit:]]{4}-'
-      exclude_lines:
-        - '^DBG'
-        - '^WARN'
-      fields_under_root: 'true'
-      fields:
-        - env: my_environment
-        - server_role: webserver
+      multiline.pattern ^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}
+      multiline.negate: 'true'
+      multiline.match: 'after'
+      include_lines: ['^[[:digit:]]{4}-]
+      exclude_lines: ['^DBG','^WARN']
     -
+      input_type: log
       paths:
         - '/var/log/example/*.json'
-      json.enabled: true
       json.message_key: json
       json.keys_under_root: true
       json.add_error_key: true
+
+  logging:
+    enabled: True
+    path: /var/log/filebeat
+    name: filebeat
+    rotateeverybytes: 10485760 #
+    keepfiles: 7
+
+  redis:
+    enabled: False
+    hosts:
+      - 127.0.0.1
+    key: filebeat
 
   elasticsearch:
     enabled: False
