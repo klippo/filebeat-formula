@@ -1,0 +1,31 @@
+filebeat:
+  log_paths:
+    -
+      input_type: log
+      paths:
+        - '/var/log/auth.log'
+        - '/var/log/syslog'
+        - '/var/log/messages'
+        - '/var/log/secure'
+      document_type: syslog
+      ignore_older: 24h
+      scan_frequency: 10s
+      backoff: 1s
+      max_backoff: 10s
+      backoff_factor: 2
+      force_close_files: false
+      fields_under_root: false
+      close_older:  1h
+
+  logging:
+    enabled: True
+    path: /var/log/filebeat
+    name: filebeat
+    rotateeverybytes: 10485760 #
+    keepfiles: 7
+
+  redis:
+    enabled: False
+    hosts:
+      - 127.0.0.1
+    key: filebeat
