@@ -1,5 +1,5 @@
 # filebeat formula
-Install and configure filebeat.
+Install and configure filebeat 5+.
 
 See the full [Salt Formulas installation and usage instructions](http://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html).
 
@@ -33,9 +33,6 @@ filebeat:
 ## filebeat.service
 
 Starts the filebeat service. 
-
-**Due to filebeat requiring tty to start, this state uses a SSH loopback to achieve this. (use_vt / sudoers !requiretty did not resolve this on 2015.8.x...)**
-
 
 Testing
 =======
